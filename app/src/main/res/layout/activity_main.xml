@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimary"
+    tools:context=".activity.MainActivity">
+
+    <TextView
+        android:id="@+id/speech_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:padding="10dp"
+        android:textColor="@color/white"
+        android:gravity="center"
+        android:text="@string/Avon"
+        android:textSize="20sp"/>
+
+    <io.github.controlwear.virtual.joystick.android.JoystickView
+        xmlns:custom="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/joystick"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        custom:JV_buttonColor="@color/white"
+        custom:JV_buttonSizeRatio="10%"
+        custom:JV_backgroundSizeRatio="80%"
+        custom:JV_autoReCenterButton="true"
+        custom:JV_backgroundColor="@color/colorPrimaryDark"
+        custom:JV_fixedCenter="false"/>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/speech_FAB"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="20dp"
+        android:padding="10dp"
+        android:background="@color/colorAccent"
+        android:src="@drawable/ic_mic_black_24dp"
+        />
+
+    <Button
+        android:id="@+id/SOS_button"
+        android:layout_width="100dp"
+        android:layout_height="40dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignRight="@id/speech_FAB"
+        android:layout_marginBottom="20dp"
+        android:layout_marginHorizontal="280dp"
+        android:background="@drawable/round_button"
+        android:text="SOS"
+        android:textColor="@color/white"
+        android:textSize="15dp" />
+
+
+
+</RelativeLayout>
