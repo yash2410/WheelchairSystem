@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         BASE_URL = getResources().getString(R.string.BASE_URL);
-        
+
         SOS_button = (Button)findViewById(R.id.SOS_button);
         speech_FAB = (FloatingActionButton)findViewById(R.id.speech_FAB);
         speech_Text = (TextView)findViewById(R.id.speech_text);
