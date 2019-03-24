@@ -1,3 +1,4 @@
+from pprint import pprint
 from pymongo import  MongoClient
 client = MongoClient('localhost',27017)
 WA = client.WA
@@ -12,5 +13,20 @@ def checkUser(user):
 
        print(db_find)
 
-addUser("yashdoshi","yashdoshi")
-checkUser("yashdoshi")
+def addMove(username,x,y,req_num):
+    move_dict = {"username": username,"x":x,"y":y,"req_num":req_num}
+    WA.move.insert_one(move_dict)
+
+def findMove(username):
+    db_find = WA.move.find_one({"username":username})
+    print(db_find)
+    print("#"*50)
+
+def print_move():
+    cursor = WA.move.find()
+    for document in cursor: 
+        pprint(document)
+    print("#"*50)
+
+findMove("yashdoshi")
+
