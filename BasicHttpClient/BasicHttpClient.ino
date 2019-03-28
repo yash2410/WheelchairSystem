@@ -1,10 +1,3 @@
-/**
-   BasicHTTPClient.ino
-
-    Created on: 24.05.2015
-
-*/
-
 #include <Arduino.h>
 
 #include <ESP8266WiFi.h>
@@ -15,8 +8,13 @@
 #include <WiFiClient.h>
 
 ESP8266WiFiMulti WiFiMulti;
-uint8_t Rightpin = D0;
-uint8_t Leftpin = A0;
+uint8_t pwm_r = D0;
+uint8_t pwm_l = D1;
+uint8_t in11 = D2;
+uint8_t in12 = D3;
+uint8_t in21 = D4;
+uint8_t in22 = D5;
+
 float LastID = 0;
 
 void setup() {
@@ -34,7 +32,7 @@ void setup() {
     delay(1000);
   }
   analogWriteRange(255);
-  Serial.println("____range set to 255____");
+  Serial.println("____range set at 255____");
   WiFi.mode(WIFI_STA);
   WiFiMulti.addAP("Yash J. Doshi", "pterodactyl");
 
@@ -77,7 +75,7 @@ void loop() {
     }
   }
 
-  delay(10000);
+  delay(1000);
 }
 
 void getValue(String data, char separator) {
@@ -97,24 +95,42 @@ void getValue(String data, char separator) {
   }
 
   String rightVal = data.substring(0, sep_index[0]);
-  String leftVal = data.substring(sep_index[0], sep_index[1]);
-  String IDVal = data.substring(sep_index[1], data_length);
-  float r_pwm = rightVal.toFloat();
-  float l_pwm = leftVal.toFloat();
+  String leftVal = data.substring(sep_index[0]+1, sep_index[1]);
+  String flagVal = data.substring(sep_index[1]+1, sep_index[2]);
+  String IDVal = data.substring(sep_index[2]+1, data_length);
+  float pwmR = rightVal.toFloat();
+  float pwmL = leftVal.toFloat();
   float id = IDVal.toFloat();
-  if ((LastID == (id - 1)) || LastID == 0) {
-    Move(r_pwm, l_pwm);
+  float dir_flag = flagVal.toFloat();
+
+  if ((LastID < id) || LastID == 0) {
+    Move(dir_flag, pwmR, pwmL);
+    
     LastID = id;
   } else {
-    Serial.println("Last ID didnt match");
+    Serial.println("Last ID == ID");
     Serial.println("ID : " + IDVal + "\nLast ID :" + String(LastID));
   }
 }
-void Move(float r_pwm, float l_pwm) {
-  String text = "PWM :" + String(r_pwm) + "," + String(l_pwm);
+void Move(float dir_flag, float pwmR, float pwmL) {
+  String text = "PWM :" + String(pwmR) + "," + String(pwmL)+"\n Dir : "+String(dir_flag);
   Serial.println(text);
 
-  analogWrite(Rightpin, r_pwm);
-  analogWrite(Leftpin, l_pwm);
+  if (dir_flag == 0) {
+    digitalWrite(in11, LOW);
+    digitalWrite(in21, HIGH);
+    digitalWrite(in12, HIGH);
+    digitalWrite(in22, LOW);
+  } else if (dir_flag == 1) {
+    digitalWrite(in11, HIGH);
+    digitalWrite(in21, LOW);
+    digitalWrite(in12, LOW);
+    digitalWrite(in22, HIGH);
+  } else {
+    Serial.println("Invalid flag value : " + String(dir_flag));
+  }
+
+  analogWrite(pwm_r, pwmR);
+  analogWrite(pwm_l, pwmL);
 }
 
