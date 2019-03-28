@@ -131,15 +131,62 @@ def movement_processing():
     strength = request.form['strength']
     username = request.form['username']
     x_param = float(strength)*math.cos(float(angle))
-    x_param = ard_map(x_param,-100,100.0,0,255)
     y_param = float(strength)*math.sin(float(angle))
-    y_param = ard_map(x_param,0,100.0,0,255)
+    r_pwm = 0
+    l_pwm = 0
+    dir_flag = 0
     move_dict = {
         "username" : username,
-        "x" : x_param,
-        "y" : y_param
+        "strength" : strength,
+        "angle" : angle
     }
     print(move_dict)
+
+    if(x_param > 0 and y_param > 0) :
+        dir_flag = 0
+        x_param = ard_map(x_param,0,100.0,0,255)
+        y_param = ard_map(x_param,0,100.0,0,255)
+        if(x_param>y_param):
+            r_pwm = x_param
+            l_pwm = y_param
+        else:
+            r_pwm = y_param
+            l_pwm = x_param
+    elif(x_param < 0 and y_param > 0) :
+        dir_flag = 0
+        x_param = ard_map(x_param,-100,0,0,255)
+        y_param = ard_map(x_param,0,100.0,0,255)
+        if(x_param>y_param):
+            l_pwm = x_param
+            r_pwm = y_param
+        else:
+            l_pwm = y_param
+            r_pwm = x_param
+    elif(x_param > 0 and y_param < 0) :
+        dir_flag = 1        
+        x_param = ard_map(x_param,100,0,0,255)
+        y_param = ard_map(x_param,-100,0,0,255)
+        if(x_param>y_param):
+            l_pwm = x_param
+            r_pwm = y_param
+        else:
+            l_pwm = y_param
+            r_pwm = x_param
+    elif(x_param < 0 and y_param < 0) :
+        dir_flag = 1
+        x_param = ard_map(x_param,-100,0,0,255)
+        y_param = ard_map(x_param,-100,0,0,255)
+        if(x_param>y_param):
+            r_pwm = x_param
+            l_pwm = y_param
+        else:
+            r_pwm = y_param
+            l_pwm = x_param
+        
+    """
+    x_param = ard_map(x_param,0,100.0,0,255)
+    y_param = ard_map(x_param,0,100.0,0,255)
+    """
     
     if (x_param == 0.0 and y_param == 0.0):
         print("x and y are 0")
@@ -152,9 +199,10 @@ def movement_processing():
             {"username": username},
             {
                 "$set": {
-                    "x": x_param,
-                    "y": y_param,
-                    "req_num" : req_num
+                "r_pwm" : r_pwm,
+                "l_pwm" : l_pwm,
+                "dir_flag": dir_flag,
+                "req_num" : req_num
                 }
             }
         )
@@ -163,8 +211,9 @@ def movement_processing():
         print("#"*50)
         movement_dict = {
             "username" : username,
-            "x" : x_param,
-            "y" : y_param,
+            "r_pwm" : r_pwm,
+            "l_pwm" : l_pwm,
+            "dir_flag": dir_flag,
             "req_num" : 0
         }
         WA.move.insert_one(movement_dict)

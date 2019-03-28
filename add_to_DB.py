@@ -28,5 +28,16 @@ def print_move():
         pprint(document)
     print("#"*50)
 
-findMove("yashdoshi")
+def drop_db(collection):
+    if collection is "move":
+        WA.move.drop()
+    elif collection is "user":
+        WA.user.drop()
+    elif collection is "speech":
+        WA.speech.drop()
+    else:
+        pprint("Invalid Collection")     
+        
 
+#drop_db("move")
+findMove(u'yashdoshi')

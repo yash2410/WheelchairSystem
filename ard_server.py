@@ -22,15 +22,16 @@ def speech(user):
 
 @app.route('/arduino/movement/<user>',methods=['GET', 'POST'])
 def movement(user):
-    db_find = WA.move.find_one({'username': user})
+    db_find = WA.move.find_one({'username': 'yashdoshi'})
     if(db_find != None):
-        x_param = db_find["x"]
-        y_param = db_find["y"]
+        r_pwm = db_find["r_pwm"]
+        l_pwm = db_find["l_pwm"]
+        dir_flag = db_find["dir_flag"]
         req_num = db_find["req_num"]        
-        query_reply = str(x_param)+","+str(y_param)+","+str(req_num)
-        print("Reply : " +query_reply)
+        query_reply = str(r_pwm)+","+str(l_pwm)+","+str(dir_flag)+","+str(req_num)
+        print("Repy : {}" .format(query_reply))
         return query_reply
-        
+    print ("Failed")
     return "Failed"
 
 
